@@ -55,13 +55,13 @@ public class MainActivity extends AppCompatActivity {
 
     }//upload
 
-    private class UpLoadValue extends AsyncTask<int, Void, String> {
+    private class UpLoadValue extends AsyncTask<Integer, Void, String> {
 
 
         @Override
-        protected String doInBackground(int... params) {
+        protected String doInBackground(Integer... params) {
             return null;
-        }//doInBack
+        }
 
         @Override
         protected void onPostExecute(String s) {
