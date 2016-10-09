@@ -1,11 +1,16 @@
 package asuper.wut.myrobot;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -51,22 +56,49 @@ public class MainActivity extends AppCompatActivity {
 
     private void upLoadIntegerToDweet(int anInt) {
 
-
+        UpLoadValue upLoadValue = new UpLoadValue(MainActivity.this);
+        upLoadValue.execute(anInt);
 
     }//upload
 
     private class UpLoadValue extends AsyncTask<Integer, Void, String> {
 
 
+        //explicit
+        private Context context;
+        private static final String urlSTRING="https://dweet.io/dweet/for/SuperWorawut?Servo1=";
+
+        public UpLoadValue(Context context) {
+            this.context = context;
+        }//Constructor
+
         @Override
         protected String doInBackground(Integer... params) {
+
+            try {
+
+                String urlDweet =urlSTRING + Integer.toString(params[0]);
+
+                OkHttpClient okHttpClient=new OkHttpClient();
+                Request.Builder builder = new Request.Builder();
+                Request request = builder.url(urlDweet).build();
+                Response response = okHttpClient.newCall(request).execute();
+                return response.body().string();
+
+
+            } catch (Exception e) {
+                Log.d("RobotV2", "e doInBack==>" + e.toString());
+            }
+
             return null;
-        }
+        }//doInBack
 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-        }//onPost
+
+            Log.d("RobotV2","Result JSON==>"+s);
+        }//onPostจบ8octจ้า
 
     }//UploadValue
 
