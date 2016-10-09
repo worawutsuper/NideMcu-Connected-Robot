@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -18,6 +19,13 @@ public class MainActivity extends AppCompatActivity {
     private TextView textView;
     private SeekBar seekBar;
     private int anInt = 0;
+    private RadioGroup radioGroup;
+    private String[] strings =new String[]{
+            "Servo1",
+            "Servo2",
+            "Servo3",
+            "Servo4"};
+    private int index = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,13 +35,42 @@ public class MainActivity extends AppCompatActivity {
         //Bind Widget
         textView= (TextView) findViewById(R.id.textView);
         seekBar = (SeekBar) findViewById(R.id.seekBar);
+        radioGroup = (RadioGroup) findViewById(R.id.ragServo);
+
+
+
+        //Radio Controller
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int i) {
+
+                switch (i) {
+
+                    case R.id.radioButton:
+                         index=0;
+                         break;
+                    case R.id.radioButton2:
+                        index=1;
+                        break;
+                    case R.id.radioButton3:
+                            index=0;
+                    break;
+                    case R.id.radioButton4:
+                            index=1;
+                    break;
+
+                }
+
+
+            }//onChecked
+        });
 
         //SeekBar Controller
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-
-                anInt=i*10;
+                seekBar.setMax(179);
+                anInt=i;
                 textView.setText(Integer.toString(anInt));
 
 
@@ -64,9 +101,10 @@ public class MainActivity extends AppCompatActivity {
     private class UpLoadValue extends AsyncTask<Integer, Void, String> {
 
 
+
         //explicit
         private Context context;
-        private static final String urlSTRING="https://dweet.io/dweet/for/SuperWorawut?Servo1=";
+        private static final String urlSTRING="https://dweet.io/dweet/for/SuperWorawut?";
 
         public UpLoadValue(Context context) {
             this.context = context;
@@ -77,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
 
             try {
 
-                String urlDweet =urlSTRING + Integer.toString(params[0]);
+                String urlDweet =urlSTRING +strings[index]+ Integer.toString(params[0]);
 
                 OkHttpClient okHttpClient=new OkHttpClient();
                 Request.Builder builder = new Request.Builder();
